@@ -101,6 +101,8 @@ public class BasicInterpreterTests {
 
         {"BlockInlining", "testToDoNestDoNestIfTrue",                 2, Long.class },
 
+        {"NonLocalVars",  "writeDifferentTypes", 3.75, Double.class },
+
     });
   }
 
@@ -124,6 +126,13 @@ public class BasicInterpreterTests {
       long expected = (int) expectedResult;
       long actual   = (long) actualResult;
       assertEquals(expected, actual);
+      return;
+    }
+
+    if (resultType == Double.class) {
+      double expected = (double) expectedResult;
+      double actual   = (double) actualResult;
+      assertEquals(expected, actual, 1e-15);
       return;
     }
 
