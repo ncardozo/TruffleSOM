@@ -735,11 +735,7 @@ public final class Parser {
     SourceCoordinate coord = getCoordinate();
     switch (sym) {
       case Pound: {
-        try {
-          peekForNextSymbolFromLexer();
-        } catch (IllegalStateException e) {
-          /* Come from a trace that already peeked */
-        }
+        peekForNextSymbolFromLexerIfNecessary();
         if (nextSym == NewTerm){
           return new ArrayLiteralNode(literalArray(), getSource(coord));
         } else {
@@ -829,11 +825,8 @@ public final class Parser {
   private Object getObjectForCurrentLiteral() throws ParseError {
     switch (sym) {
       case Pound:
-        try {
-          peekForNextSymbolFromLexer();
-        } catch (IllegalStateException e) {
-          /* Come from a trace that already peeked */
-        }
+        peekForNextSymbolFromLexerIfNecessary();
+
         if (nextSym == NewTerm){
           return literalArray();
         } else {
@@ -968,6 +961,12 @@ public final class Parser {
   private void getSymbolFromLexer() {
     sym  = lexer.getSym();
     text = lexer.getText();
+  }
+
+  private void peekForNextSymbolFromLexerIfNecessary() {
+    if (!lexer.getPeekDone()) {
+      peekForNextSymbolFromLexer();
+    }
   }
 
   private void peekForNextSymbolFromLexer() {
